@@ -145,6 +145,10 @@ media/
 *.sqlite3
 *.db
 
+# Local settings (contains sensitive data)
+settings_local.py
+agendai/settings_local.py
+
 # Twilio credentials (sensitive data)
 twilio_config.py
 twilio_config_example.py
