@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load booking_tags %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+<h1 class="text-2xl font-bold">Agenda</h1>
+<div class="flex gap-2">
+<a class="btn" href="{% url 'export_csv' %}?service={{ params.service }}&status={{ params.status }}&from={{ params.from }}&to={{ params.to }}&q={{ params.q }}">Exportar CSV</a>
+<a class="btn" href="/admin/">Abrir Admin</a>
+</div>
+</div>
+<form method="get" class="card mb-6 grid md:grid-cols-6 gap-3">
+<input class="input md:col-span-2" type="text" name="q" value="{{ params.q }}" placeholder="Buscar por nome, email, telefone" />
+<select class="input" name="service">
+<option value="">Todos os serviços</option>
+ {% for s in services %}
+<option value="{{ s.id }}" {% if params.service|default:'' == s.id|stringformat:'s' %}selected{% endif %}>{{ s.name }}</option>
+ {% endfor %}
+</select>
+<select class="input" name="status">
+<option value="">Todos status</option>
+<option value="pending" {% if params.status == 'pending' %}selected{% endif %}>Pendente</option>
+<option value="confirmed" {% if params.status == 'confirmed' %}selected{% endif %}>Confirmado</option>
+<option value="canceled" {% if params.status == 'canceled' %}selected{% endif %}>Cancelado</option>
+</select>
+<input class="input" type="date" name="from" value="{{ params.from }}" />
+<input class="input" type="date" name="to" value="{{ params.to }}" />
+<button class="btn-primary">Filtrar</button>
+</form>
+<div class="bg-white border rounded-2xl overflow-hidden">
+<table class="w-full text-sm">
+<thead class="bg-slate-100 text-slate-600">
+<tr>
+<th class="text-left p-3">Data/Hora</th>
+<th class="text-left p-3">Serviço</th>
+<th class="text-left p-3">Cliente</th>
+<th class="text-left p-3">Contato</th>
+<th class="text-left p-3">Status</th>
+<th class="text-left p-3">Ações</th>
+</tr>
+</thead>
+<tbody>
+ {% for a in appts %}
+<tr class="border-t">
+<td class="p-3 whitespace-nowrap">{{ a.starts_at|local|date:'d/m/Y H:i' }}</td>
+<td class="p-3">{{ a.service.name }}</td>
+<td class="p-3">{{ a.customer_name }}</td>
+<td class="p-3">
+<div>{{ a.customer_email }}</div>
+<div class="text-slate-500">{{ a.customer_phone }}</div>
+</td>
+<td class="p-3">
+<span class="badge {% if a.status == 'confirmed' %}border-green-300 text-green-700{% elif a.status == 'canceled' %}border-red-300 text-red-700{% else %}border-amber-300 text-amber-700{% endif %}">
+ {{ a.get_status_display }}
+</span>
+</td>
+<td class="p-3">
+<div class="flex gap-2">
+<a class="btn" href="{% url 'update_status' a.id 'confirmed' %}">Confirmar</a>
+<a class="btn" href="{% url 'update_status' a.id 'pending' %}">Pendente</a>
+<a class="btn" href="{% url 'update_status' a.id 'canceled' %}">Cancelar</a>
+</div>
+</td>
+</tr>
+ {% empty %}
+<tr><td class="p-4 text-slate-500" colspan="6">Nenhum agendamento encontrado.</td></tr>
+ {% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

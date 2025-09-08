@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}AgendAI — Início{% endblock %}
+
+{% block content %}
+<section class="grid md:grid-cols-2 gap-6 items-start">
+<div class="card">
+<h1 class="text-2xl font-bold mb-2">Agende em 3 passos</h1>
+<ol class="list-decimal ml-5 space-y-2 text-slate-700">
+<li>Escolha um serviço</li>
+<li>Selecione a data e veja horários disponíveis</li>
+<li>Informe seus dados e confirme</li>
+</ol>
+</div>
+<div class="card">
+<h2 class="text-xl font-semibold mb-4">Serviços</h2>
+<div class="grid sm:grid-cols-2 gap-4">
+ {% for s in services %}
+<a href="{% url 'schedule' s.id %}" class="block border rounded-xl p-4 hover:shadow-md">
+<div class="font-semibold">{{ s.name }}</div>
+<div class="text-sm text-slate-600">Duração: {{ s.duration_minutes }} min</div>
+ {% if s.price and s.price > 0 %}
+<div class="text-sm text-slate-600">Preço: R$ {{ s.price }}</div>
+ {% endif %}
+</a>
+ {% empty %}
+<p class="text-slate-500">Nenhum serviço disponível no momento.</p>
+ {% endfor %}
+</div>
+</div>
+</section>
+{% endblock %}

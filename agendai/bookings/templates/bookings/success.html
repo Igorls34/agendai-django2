@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load booking_tags %}
+
+{% block title %}Agendamento confirmado{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto card text-center">
+<div class="text-2xl font-bold mb-2">Agendamento realizado!</div>
+<p class="text-slate-600 mb-6">Obrigado, {{ appt.customer_name }}. Encontro marcado para <strong>{{ appt.starts_at|local|date:'d/m/Y H:i' }}</strong> — serviço <strong>{{ appt.service.name }}</strong>.</p>
+<a class="btn" href="/">Voltar ao início</a>
+</div>
+{% endblock %}

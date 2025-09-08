@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Agendar — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto card">
+<h1 class="text-2xl font-bold mb-1">Agendar: {{ service.name }}</h1>
+<p class="text-slate-600 mb-6">Duração: {{ service.duration_minutes }} min</p>
+<form method="post" class="grid gap-6">
+ {% csrf_token %}
+<div class="grid md:grid-cols-2 gap-4">
+<div>
+<label class="label">Data</label>
+ {{ form.date }}
+</div>
+<div>
+<label class="label">Horário</label>
+<div class="grid grid-cols-2 gap-2" id="slot-container">
+<input type="time" name="time" id="id_time" class="input" required />
+</div>
+<p class="text-xs text-slate-500 mt-1">Selecione a data para ver os horários sugeridos.</p>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-4">
+<div>
+<label class="label">Seu nome</label>
+ {{ form.customer_name }}
+</div>
+<div>
+<label class="label">Telefone</label>
+ {{ form.customer_phone }}
+</div>
+<div>
+<label class="label">E-mail</label>
+ {{ form.customer_email }}
+</div>
+<div class="md:col-span-2">
+<label class="label">Observações</label>
+ {{ form.notes }}
+</div>
+</div>
+ {% if form.errors %}
+<div class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+<strong>Erros:</strong> {{ form.errors }}
+</div>
+ {% endif %}
+<div class="flex items-center gap-3">
+<button class="btn-primary px-5 py-2 rounded-lg">Confirmar agendamento</button>
+<a class="btn" href="/">Voltar</a>
+</div>
+</form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/bookings/js/availability.js"></script>
+<script>
+window.Availability.init({
+endpoint: '{% url 'availability' %}',
+serviceId: {{ service.id }}
+});
+</script>
+{% endblock %}
