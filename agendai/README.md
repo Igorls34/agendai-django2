@@ -107,4 +107,59 @@ Usuário final com login para reagendar/cancelar.
 Calendário semanal no dashboard (grid visual).
 Regras de disponibilidade por dia da semana e feriados.
 
+## 🚀 Deploy para Produção
+
+### Railway (Recomendado - Deploy Automático)
+1. **Acesse:** [railway.app](https://railway.app)
+2. **Conecte seu GitHub** e selecione o repositório `agendai-django`
+3. **Configure variáveis de ambiente:**
+   ```bash
+   SECRET_KEY=your-secret-key-here
+   DEBUG=False
+   ALLOWED_HOSTS=your-app.railway.app
+   DATABASE_URL=postgresql://...
+   
+   # Email (opcional)
+   EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USE_TLS=True
+   EMAIL_HOST_USER=your-email@gmail.com
+   EMAIL_HOST_PASSWORD=your-gmail-app-password
+   
+   # Twilio (opcional)
+   TWILIO_ACCOUNT_SID=your-twilio-sid
+   TWILIO_AUTH_TOKEN=your-twilio-token
+   TWILIO_PHONE_NUMBER=+1234567890
+   ```
+4. **Deploy automático!** 🚀
+
+### Heroku
+```bash
+# 1. Instale Heroku CLI
+heroku create seu-app-agendai
+
+# 2. Configure variáveis de ambiente
+heroku config:set SECRET_KEY=your-secret-key
+heroku config:set DEBUG=False
+heroku config:set ALLOWED_HOSTS=seu-app.herokuapp.com
+
+# 3. Deploy
+git push heroku master
+```
+
+### Configuração Local de Produção
+```bash
+# 1. Instale dependências de produção
+pip install -r requirements.txt
+
+# 2. Configure variáveis de ambiente
+export SECRET_KEY=your-secret-key
+export DEBUG=False
+export ALLOWED_HOSTS=localhost,127.0.0.1
+
+# 3. Execute com gunicorn
+gunicorn agendai.wsgi --bind 0.0.0.0:8000
+```
+
 ---
