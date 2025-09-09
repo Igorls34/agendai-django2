@@ -6,9 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-me')
 
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,agendai-django2.vercel.app,agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,21 +55,33 @@ ASGI_APPLICATION = 'agendai.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DATABASE_NAME', 'agendai'),
-        'USER': os.environ.get('DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
-        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
-        'PORT': os.environ.get('DATABASE_PORT', '5432'),
-    }
-}
-
-# Fallback para SQLite se PostgreSQL não estiver disponível
-if not os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+# Configuração para PostgreSQL via DATABASE_URL (Vercel/Outros)
+if os.environ.get('DATABASE_URL'):
+    try:
+        import dj_database_url
+        DATABASES['default'] = dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    except ImportError:
+        pass
+else:
+    # Fallback para PostgreSQL manual se DATABASE_URL não estiver disponível
+    if os.environ.get('DATABASE_HOST'):
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DATABASE_NAME', 'agendai'),
+            'USER': os.environ.get('DATABASE_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+            'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+            'PORT': os.environ.get('DATABASE_PORT', '5432'),
+        }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
