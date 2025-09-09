@@ -2,7 +2,7 @@ from django import forms
 from .models import Appointment, Service
 
 class BookingForm(forms.ModelForm):
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'id': 'id_date'}))
     time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
 
     class Meta:
