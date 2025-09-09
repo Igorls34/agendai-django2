@@ -1,53 +1,195 @@
-## ✅ **SISTEMA FUNCIONANDO!**
+# 🚀 **AgendAI - Sistema de Agendamentos Django**
 
-### 🎉 **Status Atual:**
-- ✅ **Email**: Funcionando (aparece no console)
-- ✅ **SMS**: Funcionando com qualquer número brasileiro
-- ✅ **WhatsApp**: Configurado (sandbox limitado)
+Sistema completo de agendamentos com notificações por email, SMS e WhatsApp. Pronto para produção e deploy na nuvem.
 
-### 📱 **Como Testar:**
+## 🌐 **Deploy no Vercel (Recomendado)**
 
-1. **Inicie o servidor:**
-   ```bash
-   cd c:/Users/User/Desktop/site-agendamento/agendai
-   python manage.py runserver
-   ```
+### **Passo 1: Configurar Repositório**
+1. Certifique-se de que o código está no GitHub: `https://github.com/Igorls34/agendai-django2`
+2. O projeto já está configurado com `vercel.json` e `api/index.py`
 
-2. **Acesse:** `http://127.0.0.1:8000/`
+### **Passo 2: Deploy no Vercel**
+1. Acesse: [vercel.com/new](https://vercel.com/new)
+2. Conecte sua conta do GitHub
+3. Selecione o repositório `agendai-django2`
+4. Configure:
+   - **Framework Preset:** `Other`
+   - **Root Directory:** `./`
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Output Directory:** `./`
 
-3. **Faça um agendamento:**
-   - Escolha serviço
-   - Preencha dados (nome, email, telefone)
-   - Selecione data/hora
-   - Clique "Agendar"
+### **Passo 3: Configurar Variáveis de Ambiente**
+No Vercel Dashboard → Project Settings → Environment Variables:
 
-4. **Receba notificações:**
-   - 📧 **Email** (no console)
-   - 📱 **SMS** (no celular)
-   - ✅ **Confirmação** no dashboard
+```bash
+# Django
+SECRET_KEY=sua-secret-key-muito-segura-aqui
+DEBUG=False
+ALLOWED_HOSTS=agendai-django2.vercel.app,agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app
 
-### 💰 **Custos:**
-- **Email**: Grátis
-- **SMS**: ~$0.05 cada (~R$ 0,25)
-- **WhatsApp**: Grátis (produção)
+# Banco de dados (PostgreSQL)
+DATABASE_URL=postgresql://usuario:senha@host:porta/database
 
-### 🔧 **Configurações Atuais:**
-```python
-# settings.py
-TWILIO_PHONE_NUMBER = '+12155159685'  # Para SMS
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Para desenvolvimento
+# Email (Gmail)
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=seu-email@gmail.com
+EMAIL_HOST_PASSWORD=sua-senha-de-app-gmail
+
+# Twilio
+TWILIO_ACCOUNT_SID=seu-account-sid
+TWILIO_AUTH_TOKEN=seu-auth-token
+TWILIO_PHONE_NUMBER=+5511999999999
 ```
 
-## Notificações por Email e WhatsApp
+### **Passo 4: Executar Migrações**
+Após o primeiro deploy, execute:
+```bash
+# Via terminal local ou Vercel CLI
+python manage.py migrate
+python manage.py seed_demo
+python manage.py createsuperuser
+```
 
-O sistema envia automaticamente notificações quando um agendamento é confirmado:
+### **Passo 5: URLs Após Deploy**
+- **Aplicação:** `https://agendai-django2.vercel.app`
+- **Admin:** `https://agendai-django2.vercel.app/admin/`
+- **Dashboard:** `https://agendai-django2.vercel.app/dashboard/`
 
-### Configuração do Email
-- Para desenvolvimento: emails são impressos no console
-- Para produção: configure EMAIL_HOST_USER e EMAIL_HOST_PASSWORD em settings.py
+---
 
-### Configuração do WhatsApp (Twilio)
-1. **Crie uma conta no [Twilio](https://www.twilio.com/)**
+## 🖥️ **Desenvolvimento Local**
+
+### **Pré-requisitos:**
+- Python 3.12+
+- Git
+
+### **Instalação:**
+```bash
+# Clone o repositório
+git clone https://github.com/Igorls34/agendai-django2.git
+cd agendai-django2
+
+# Instale dependências
+pip install -r requirements.txt
+
+# Execute migrações
+python manage.py migrate
+
+# Crie dados de exemplo
+python manage.py seed_demo
+
+# Crie superusuário
+python manage.py createsuperuser
+
+# Execute servidor
+python manage.py runserver
+```
+
+### **Acesse:**
+- **Aplicação:** `http://127.0.0.1:8000/`
+- **Admin:** `http://127.0.0.1:8000/admin/`
+- **Dashboard:** `http://127.0.0.1:8000/dashboard/`
+
+---
+
+## 📱 **Funcionalidades**
+
+### ✅ **Sistema Completo:**
+- 📅 **Agendamentos** com validação de horários
+- 👥 **Dashboard administrativo** com tabela responsiva
+- 📧 **Notificações por email** automáticas
+- 📱 **SMS** para qualquer número brasileiro
+- 💬 **WhatsApp** (configurado para produção)
+- � **Busca e filtros** avançados
+- � **Export CSV** de agendamentos
+- 🎨 **Interface moderna** com Tailwind CSS
+
+### 🎯 **Fluxo de Uso:**
+1. **Cliente** acessa a página inicial
+2. **Escolhe** um serviço disponível
+3. **Preenche** dados pessoais
+4. **Seleciona** data e horário disponível
+5. **Confirma** agendamento
+6. **Recebe** notificações automáticas
+7. **Administrador** gerencia via dashboard
+
+---
+
+## ⚙️ **Configurações**
+
+### **Email (Gmail SMTP):**
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'seu-email@gmail.com'
+EMAIL_HOST_PASSWORD = 'sua-senha-de-app-gmail'
+```
+
+### **Twilio (SMS/WhatsApp):**
+```python
+TWILIO_ACCOUNT_SID = 'seu-account-sid'
+TWILIO_AUTH_TOKEN = 'seu-auth-token'
+TWILIO_PHONE_NUMBER = '+5511999999999'
+```
+
+---
+
+## 🗂️ **Estrutura do Projeto**
+
+```
+agendai-django2/
+├── agendai/                 # Configurações Django
+├── bookings/                # App principal
+├── templates/               # Templates HTML
+├── static/                  # Arquivos estáticos
+├── api/                     # Ponto de entrada Vercel
+├── vercel.json             # Configuração Vercel
+└── requirements.txt        # Dependências Python
+```
+
+---
+
+## 💰 **Custos**
+
+- **Vercel:** Plano gratuito inclui 100GB bandwidth/mês
+- **PostgreSQL:** Neon/Supabase (~$0-5/mês)
+- **Email:** Gratuito via Gmail
+- **SMS:** ~$0.05 cada (~R$ 0,25)
+- **WhatsApp:** Gratuito em produção
+
+---
+
+## 🔧 **Comandos Úteis**
+
+```bash
+# Desenvolvimento
+python manage.py runserver              # Iniciar servidor
+python manage.py migrate                # Executar migrações
+python manage.py seed_demo              # Criar dados exemplo
+python manage.py createsuperuser        # Criar admin
+
+# Produção
+python manage.py collectstatic          # Coletar arquivos estáticos
+python manage.py check --deploy         # Verificar configurações produção
+```
+
+---
+
+## 📞 **Suporte**
+
+Para dúvidas ou problemas:
+1. Verifique os **logs do Vercel**
+2. Teste localmente primeiro
+3. Consulte a documentação do [Django](https://docs.djangoproject.com/) e [Vercel](https://vercel.com/docs)
+
+---
+
+**🎉 Pronto para produção! Seu sistema de agendamentos está completo e funcional.**
 2. **Ative o WhatsApp Sandbox**:
    - No console do Twilio, vá para "Messaging" > "Try it out" > "WhatsApp"
    - Siga as instruções para ativar o sandbox
