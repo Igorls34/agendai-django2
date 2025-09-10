@@ -1,7 +1,12 @@
 from django.urls import path
 from . import views
+from . import test_views
 
 urlpatterns = [
+    # URLs de teste para debug
+    path('test/', test_views.test_view, name='test_view'),
+    
+    # URLs normais
     path('', views.home, name='home'),
     path('servico/<int:service_id>/agendar/', views.schedule, name='schedule'),
     path('availability/', views.availability, name='availability'),
