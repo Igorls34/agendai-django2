@@ -5,8 +5,12 @@ class Command(BaseCommand):
     help = 'Cria serviços básicos para teste'
 
     def handle(self, *args, **options):
-        # Limpa serviços existentes
-        Service.objects.all().delete()
+        # Verifica se já existem serviços
+        if Service.objects.exists():
+            self.stdout.write(
+                self.style.WARNING('⚠️ Serviços já existem, pulando criação')
+            )
+            return
         
         # Cria serviços básicos
         services_data = [
