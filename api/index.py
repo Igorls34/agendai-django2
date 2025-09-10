@@ -1,20 +1,19 @@
 import os
 import sys
-import django
-from django.core.wsgi import get_wsgi_application
+from pathlib import Path
 
-# Add the project directory to the Python path
-project_dir = os.path.dirname(os.path.dirname(__file__))
-sys.path.insert(0, project_dir)
+# Add the project root to Python path
+current_dir = Path(__file__).resolve().parent
+project_root = current_dir.parent
+sys.path.insert(0, str(project_root))
 
-# Configure Django settings
+# Set environment variables
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'agendai.settings')
 
-# Setup Django
+# Import Django
+import django
 django.setup()
 
-# Get the WSGI application
-app = get_wsgi_application()
-
-# Vercel expects the app to be named 'app'
-application = app
+# Import WSGI application
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
