@@ -4,7 +4,8 @@ import django
 from django.core.wsgi import get_wsgi_application
 
 # Add the project directory to the Python path
-sys.path.insert(0, os.path.dirname(__file__))
+project_dir = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_dir)
 
 # Configure Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'agendai.settings')
