@@ -5,6 +5,7 @@ from . import test_views
 urlpatterns = [
     # URLs de teste para debug
     path('test/', test_views.test_view, name='test_view'),
+    path('simple/', test_views.simple_home, name='simple_home'),
     
     # URLs normais
     path('', views.home, name='home'),
