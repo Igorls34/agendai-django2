@@ -5,14 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Segurança: SECRET_KEY sem fallback fraco em produção
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    if os.getenv("DEBUG", "False").lower() == "true":
-        SECRET_KEY = "dev-super-secret-change-me-in-production"
-    else:
-        # Fallback temporário para debug no Vercel
-        SECRET_KEY = "temporary-vercel-debug-key-change-asap"
+# Segurança: SECRET_KEY com fallback temporário para Vercel
+SECRET_KEY = os.getenv("SECRET_KEY", "vercel-temp-key-2025-change-me")
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 

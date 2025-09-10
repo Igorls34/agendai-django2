@@ -3,6 +3,9 @@ import sys
 import traceback
 from pathlib import Path
 
+# Force new deployment - v2.0
+print("🚀 AgendAI starting on Vercel v2.0...")
+
 # Add project root to path
 current_dir = Path(__file__).resolve().parent
 project_root = current_dir.parent
@@ -19,7 +22,10 @@ try:
     from django.core.wsgi import get_wsgi_application
     app = get_wsgi_application()
     
+    print("✅ Django WSGI application created successfully!")
+    
 except Exception as e:
+    print(f"❌ Django initialization failed: {e}")
     # Create error handler if Django fails to initialize
     def error_app(environ, start_response):
         error_msg = f"""
@@ -30,7 +36,7 @@ except Exception as e:
         <h2>Error: {str(e)}</h2>
         <h3>Environment Variables:</h3>
         <ul>
-        <li>SECRET_KEY: {"✅ Set" if os.getenv("SECRET_KEY") else "❌ Missing"}</li>
+        <li>SECRET_KEY: {"✅ Set" if os.getenv("SECRET_KEY") else "❌ Missing (using fallback)"}</li>
         <li>DEBUG: {os.getenv("DEBUG", "Not set")}</li>
         <li>DATABASE_URL: {"✅ Set" if os.getenv("DATABASE_URL") else "❌ Missing (using SQLite fallback)"}</li>
         <li>Python Path: {sys.path}</li>
