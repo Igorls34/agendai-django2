@@ -1,15 +1,24 @@
 import os
-import os
+import dj_database_url
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-me')
+# Segurança: SECRET_KEY sem fallback fraco em produção
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY and not os.getenv("DEBUG", "False").lower() == "true":
+    raise ValueError("SECRET_KEY é obrigatório em produção")
 
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app').split(',')
+ALLOWED_HOSTS = [h.strip() for h in os.getenv(
+    "ALLOWED_HOSTS", ".vercel.app,localhost,127.0.0.1"
+).split(",")]
+
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.getenv(
+    "CSRF_TRUSTED_ORIGINS", "https://*.vercel.app"
+).split(",")]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,11 +63,13 @@ WSGI_APPLICATION = 'agendai.wsgi.application'
 
 ASGI_APPLICATION = 'agendai.asgi.application'
 
+# Banco de dados: Postgres em prod; local pode cair em SQLite se DATABASE_URL não estiver setado
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        env="DATABASE_URL",
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 # Configuração para PostgreSQL via DATABASE_URL (Vercel/Outros)
@@ -72,17 +83,6 @@ if os.environ.get('DATABASE_URL'):
         )
     except ImportError:
         pass
-else:
-    # Fallback para PostgreSQL manual se DATABASE_URL não estiver disponível
-    if os.environ.get('DATABASE_HOST'):
-        DATABASES['default'] = {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DATABASE_NAME', 'agendai'),
-            'USER': os.environ.get('DATABASE_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
-            'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
-            'PORT': os.environ.get('DATABASE_PORT', '5432'),
-        }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -115,6 +115,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise para servir arquivos estáticos em produção
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Recomendado atrás de proxy HTTPS (Vercel)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
