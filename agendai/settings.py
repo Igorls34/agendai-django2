@@ -8,7 +8,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-me')
 
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,agendai-django2.vercel.app,agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app,agendai-django2-igors-projects-3b05ccee.vercel.app,agendai-django2-dij3kkgok-igors-projects-3b05ccee.vercel.app').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,agendai-django2.vercel.app,agendai-django2-hnqqq45if-igors-projects-3b05ccee.vercel.app,agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app,agendai-django2-igors-projects-3b05ccee.vercel.app,agendai-django2-dij3kkgok-igors-projects-3b05ccee.vercel.app').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
