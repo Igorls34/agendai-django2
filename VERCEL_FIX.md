@@ -7,12 +7,26 @@ Invalid HTTP_HOST header: 'agendai-django2.vercel.app'.
 You may need to add 'agendai-django2.vercel.app' to ALLOWED_HOSTS.
 ```
 
+**📝 Nota:** Este erro pode aparecer para diferentes domínios gerados pelo Vercel. Cada novo deployment pode ter um domínio único.
+
 ## ✅ **Solução Aplicada:**
 
-### **1. ALLOWED_HOSTS Corretos (Atualizado):**
+### **1. ALLOWED_HOSTS Corretos (Atualizado com todos os domínios):**
 ```python
 # agendai/settings.py
 ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS', 
+    'localhost,127.0.0.1,agendai-django2.vercel.app,agendai-django2-hnqqq45if-igors-projects-3b05ccee.vercel.app,agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app,agendai-django2-igors-projects-3b05ccee.vercel.app,agendai-django2-dij3kkgok-igors-projects-3b05ccee.vercel.app'
+).split(',')
+```
+
+### **Domínios incluídos no ALLOWED_HOSTS:**
+- `agendai-django2.vercel.app` (domínio principal de produção)
+- `agendai-django2-hnqqq45if-igors-projects-3b05ccee.vercel.app` (deployment mais recente)
+- `agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app` (deployment anterior)
+- `agendai-django2-igors-projects-3b05ccee.vercel.app` (domínio do projeto)
+- `agendai-django2-dij3kkgok-igors-projects-3b05ccee.vercel.app` (deployment anterior)
+- `localhost` e `127.0.0.1` (desenvolvimento local)
     'ALLOWED_HOSTS',
     'localhost,127.0.0.1,agendai-django2.vercel.app,agendai-django2-10bfs7t1z-igors-projects-3b05ccee.vercel.app,agendai-django2-igors-projects-3b05ccee.vercel.app,agendai-django2-dij3kkgok-igors-projects-3b05ccee.vercel.app'
 ).split(',')
